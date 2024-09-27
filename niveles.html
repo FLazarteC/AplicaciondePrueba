@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantalla de Niveles</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #levels-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .level-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .level-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selecciona un Nivel</h1>
+    <div id="levels-container">
+        <button class="level-button" onclick="selectLevel(1)">Nivel 1: Roll Caida</button>
+        <button class="level-button" onclick="selectLevel(2)">Nivel 2: Pasa Vallas</button>
+        <button class="level-button" onclick="selectLevel(3)">Nivel 3: Carrera 360</button>
+        <button class="level-button" onclick="selectLevel(4)">Nivel 4: Scoot Wheel</button>
+    </div>
+
+    <script>
+        function selectLevel(level) {
+            // Redirige a la pantalla del nivel correspondiente
+            window.location.href = `nivel${level}.html`;
+        }
+    </script>
+</body>
+</html>

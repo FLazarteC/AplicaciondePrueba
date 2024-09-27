@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Perfil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #profile {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-item {
+            margin-bottom: 10px;
+        }
+        .profile-item label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-menu">
+        <button onclick="showProfile()">Ver Perfil</button>
+    </div>
+    <div id="profile">
+        <div class="profile-item">
+            <label for="nickname">Nickname:</label>
+            <input type="text" id="nickname" placeholder="Ingresa tu nickname">
+        </div>
+        <div class="profile-item">
+            <label for="profile-pic">Foto de Perfil:</label>
+            <label class="custom-file-upload">
+                <input type="file" id="profile-pic" accept="image/*">
+                Selecciona una foto
+            </label>
+            <img id="profile-pic-preview" src="#" alt="Vista previa" style="display:none; width: 100px; height: 100px; margin-top: 10px;">
+        </div>
+        <div class="profile-item">
+            <label for="specialty">Especialidad:</label>
+            <select id="specialty">
+                <option value="saltos">Saltos</option>
+                <option value="mortales">Mortales</option>
+                <option value="carrera">Carrera</option>
+            </select>
+        </div>
+        <div class="profile-item">
+            <label for="training-spot">Lugar de Entrenamiento Favorito:</label>
+            <input type="text" id="training-spot" placeholder="Ingresa el lugar">
+        </div>
+        <div class="profile-item">
+            <label for="favorite-trick">Truco Favorito:</label>
+            <input type="text" id="favorite-trick" placeholder="Ingresa tu truco favorito">
+        </div>
+        <button onclick="saveProfile()">Guardar Perfil</button>
+        <button onclick="hideProfile()">Cerrar Perfil</button>
+    </div>
+
+    <script>
+        function showProfile() {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('profile').style.display = 'flex';
+        }
+
+        function hideProfile() {
+            document.getElementById('main-menu').style.display = 'block';
+            document.getElementById('profile').style.display = 'none';
+        }
+
+        function saveProfile() {
+            var nickname = document.getElementById('nickname').value;
+            var specialty = document.getElementById('specialty').value;
+            var trainingSpot = document.getElementById('training-spot').value;
+            var favoriteTrick = document.getElementById('favorite-trick').value;
+
+            console.log('Nickname:', nickname);
+            console.log('Especialidad:', specialty);
+            console.log('Lugar de Entrenamiento:', trainingSpot);
+            console.log('Truco Favorito:', favoriteTrick);
+
+            // Aquí puedes agregar la lógica para guardar esta información en tu base de datos o localStorage
+            hideProfile();
+        }
+
+        // Previsualización de la imagen de perfil
+        document.getElementById('profile-pic').addEventListener('change', function() {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('profile-pic-preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

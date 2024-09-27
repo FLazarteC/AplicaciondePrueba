@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videos de Parkour</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #video-container {
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+        #controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+        button, select, input[type="range"] {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        #video-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-title">Scoot Wheel</div>
+    <div id="video-container">
+        <video id="videoPlayer" controls>
+            <source src="C:/xampp/htdocs/PKForAll/Video/video1.mp4" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
+    </div>
+    <div id="video-title">Roll Caida</div>
+    <div id="video-container">
+        <video id="videoPlayer" controls>
+            <source src="C:/xampp/htdocs/PKForAll/Video/video2.mp4" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
+    </div>
+    <div id="video-title">Pasa Vallas</div>
+    <div id="video-container">
+        <video id="videoPlayer" controls>
+            <source src="C:/xampp/htdocs/PKForAll/Video/video3.mp4" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
+    </div>
+    <div id="video-title">Carrera 360</div>
+    <div id="video-container">
+        <video id="videoPlayer" controls>
+            <source src="C:/xampp/htdocs/PKForAll/Video/video4.mp4" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
+    </div>
+    <div id="controls">
+        <select id="videoSelector" onchange="changeVideo(this.value)">
+            <option value="C:/xampp/htdocs/PKForAll/Video/video1.mp4">Scoot Wheel</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video2.mp4">Roll caida</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video3.mp4">Pasa Vallas</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video4.mp4">Carrera 360</option>
+            <!-- Agrega más opciones de video aquí -->
+        </select>
+        <button onclick="playPause()">Reproducir/Pausar</button>
+        <button onclick="stopVideo()">Detener</button>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1" onchange="setVolume(this.value)">
+        <select id="qualityControl" onchange="changeQuality(this.value)">
+            <option value="C:/xampp/htdocs/PKForAll/Video/video1.mp4">Calidad Alta</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video1_low.mp4">Calidad Baja</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video2.mp4">Calidad Alta</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video2_low.mp4">Calidad Baja</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video3.mp4">Calidad Alta</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video3_low.mp4">Calidad Baja</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video4.mp4">Calidad Alta</option>
+            <option value="C:/xampp/htdocs/PKForAll/Video/video4_low.mp4">Calidad Baja</option>
+            <!-- Agrega más opciones de calidad aquí -->
+        </select>
+    </div>
+
+    <script>
+        var videoPlayer = document.getElementById('videoPlayer');
+        var videoSelector = document.getElementById('videoSelector');
+        var qualityControl = document.getElementById('qualityControl');
+        var videoTitle = document.getElementById('video-title');
+
+        function playPause() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        }
+
+        function stopVideo() {
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+        }
+
+        function setVolume(volume) {
+            videoPlayer.volume = volume;
+        }
+
+        function changeQuality(src) {
+            var currentTime = videoPlayer.currentTime;
+            var isPlaying = !videoPlayer.paused;
+            videoPlayer.src = src;
+            videoPlayer.currentTime = currentTime;
+            if (isPlaying) {
+                videoPlayer.play();
+            }
+        }
+
+        function changeVideo(src) {
+            videoPlayer.src = src;
+            videoPlayer.play();
+            // Actualizar el título del video
+            updateVideoTitle(src);
+            // Actualizar las opciones de calidad para el nuevo video
+            updateQualityOptions(src);
+        }
+
+        function updateVideoTitle(src) {
+            var baseName = src.split('/').pop().split('.')[0]; // Obtiene el nombre base del archivo sin la extensión
+            videoTitle.textContent = baseName.replace(/_/g, ' '); // Reemplaza guiones bajos por espacios
+        }
+
+        function updateQualityOptions(src) {
+            var baseSrc = src.split('.')[0]; // Obtiene la base del nombre del archivo sin la extensión
+            qualityControl.innerHTML = `
+                <option value="${baseSrc}.mp4">Calidad Alta</option>
+                <option value="${baseSrc}_low.mp4">Calidad Baja</option>
+            `;
+        }
+
+        // Inicializar el título del video al cargar la página
+        updateVideoTitle(videoSelector.value);
+    </script>
+</body>
+</html>
