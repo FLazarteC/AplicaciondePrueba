@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nivel 1</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-color: #333;
+            overflow: hidden;
+        }
+        #character {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            transition: transform 0.2s linear;
+        }
+        .obstacle {
+            position: absolute;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container" onclick="moveCharacter()">
+        <div id="character"></div>
+        <div class="obstacle" style="left: 300px;"></div>
+        <div class="obstacle" style="left: 600px;"></div>
+    </div>
+
+    <script>
+        let character = document.getElementById('character');
+        let moving = false;
+        let characterPosX = 20;
+        let characterPosY = 0;
+
+        function moveCharacter() {
+            if (!moving) {
+                moving = true;
+                character.style.transition = "transform 1s linear";
+                characterPosX += 100; // Avanza 100px hacia la derecha
+                character.style.transform = `translate(${characterPosX}px, ${characterPosY}px)`;
+                setTimeout(() => {
+                    moving = false;
+                }, 1000); // Permite un nuevo movimiento después de 1 segundo
+            } else {
+                // Si ya está moviéndose, hace un salto
+                character.style.transition = "transform 0.4s ease-out";
+                characterPosX += 100; // Avanza mientras salta
+                characterPosY = -150; // Salta hacia arriba 150px
+                character.style.transform = `translate(${characterPosX}px, ${characterPosY}px)`;
+                setTimeout(() => {
+                    character.style.transition = "transform 0.4s ease-in";
+                    characterPosY = 0; // Vuelve a la posición original
+                    character.style.transform = `translate(${characterPosX}px, ${characterPosY}px)`;
+                }, 400);
+            }
+        }
+
+        function detectCollision() {
+            let characterRect = character.getBoundingClientRect();
+            let obstacles = document.querySelectorAll('.obstacle');
+
+            for (let obstacle of obstacles) {
+                let obstacleRect = obstacle.getBoundingClientRect();
+                if (
+                    characterRect.right > obstacleRect.left &&
+                    characterRect.left < obstacleRect.right &&
+                    characterRect.bottom > obstacleRect.top &&
+                    characterRect.top < obstacleRect.bottom
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function step() {
+            if (detectCollision()) {
+                alert('Colisión! Intenta de nuevo.');
+                characterPosX = 20;
+                characterPosY = 0;
+                character.style.transform = `translate(${characterPosX}px, ${characterPosY}px)`;
+                moving = false;
+            } else {
+                requestAnimationFrame(step);
+            }
+        }
+
+        step();
+    </script>
+</body>
+</html>
