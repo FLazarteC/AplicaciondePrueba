@@ -13,16 +13,32 @@
             font-family: Arial, sans-serif;
             height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
         }
         #map {
             width: 80%;
             height: 80%;
+            margin-top: 10px;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <div id="controls">
+        <button id="agregarUbicacionBtn">Agregar Ubicación</button>
+        <button id="crearRutaBtn">Crear Ruta</button>
+    </div>
     <div id="map"></div>
     <!-- Incluye Leaflet JS -->
     <script src="https://unpkg.com/leaflet"></script>
@@ -44,7 +60,11 @@
         firebase.initializeApp(firebaseConfig);
         var database = firebase.database();
 
-        // Función para inicializar el mapa
+        var puntosRuta = [];
+        var creandoRuta = false;
+        var agregandoUbicacion = false;
+
+        // Inicializa el mapa
         function initMap() {
             var map = L.map('map').setView([-17.9667, -67.1167], 13);
 
@@ -67,7 +87,7 @@
                         var lugaresParkour = [
                             { nombre: 'Parque Quirquincho', latitud: -17.981647, longitud: -67.108345, imagen: 'imag/ParqueQuirquincho.jpg' },
                             { nombre: 'Arenales Zona Norte', latitud: -17.932243, longitud: -67.138337, imagen: 'imag/ArenalesNorte.jpg' },
-                            { nombre: 'Parque ecologico', latitud: -17.950360, longitud: -67.121175, imagen: 'imag/ParqueEcologico.jpg' },
+                            { nombre: 'Parque ecológico', latitud: -17.950360, longitud: -67.121175, imagen: 'imag/ParqueEcologico.jpg' },
                             { nombre: 'Parque La Hormiguita', latitud: -17.938713, longitud: -67.115064, imagen: 'imag/ParqueHormiga.jpg' },
                             { nombre: 'SECRETARÍA MUNICIPAL DE DESARROLLO HUMANO GAMO', latitud: -17.976499, longitud: -67.110633, imagen: 'imag/Bolden.jfif' },
                             { nombre: 'Complejo Deportivo Fabril', latitud: -17.982900, longitud: -67.132920, imagen: 'imag/ComplejoFabril.jpg' }
@@ -78,37 +98,9 @@
                                 .bindPopup('<b>' + lugar.nombre + '</b><br/><img src="' + lugar.imagen + '" alt="' + lugar.nombre + '" width="150">');
                         });
 
-                        // Permitir a los usuarios agregar nuevos marcadores
-                        map.on('click', function(e) {
-                            var latlng = e.latlng;
-                            var nombreLugar = prompt('Introduce el nombre del lugar de parkour:');
-                            if (nombreLugar) {
-                                // Agrega el nuevo marcador en el mapa
-                                L.marker([latlng.lat, latlng.lng]).addTo(map)
-                                    .bindPopup('<b>' + nombreLugar + '</b>')
-                                    .openPopup();
-
-                                // Guarda la ubicación en Firebase
-                                database.ref('lugares_parkour').push({
-                                    nombre: nombreLugar,
-                                    latitud: latlng.lat,
-                                    longitud: latlng.lng
-                                });
-                            }
-                        });
-
-                        function agregarMarcadoresDeJugadores() {
-                            var dbRef = firebase.database().ref('ubicaciones_jugadores');
-                            dbRef.on('value', function(snapshot) {
-                                snapshot.forEach(function(childSnapshot) {
-                                    var jugador = childSnapshot.val();
-                                    L.marker([jugador.latitud, jugador.longitud]).addTo(map)
-                                        .bindPopup('<b>' + jugador.nombre + '</b>');
-                                });
-                            });
-                        }
-
+                        // Cargar ubicaciones de jugadores desde Firebase
                         agregarMarcadoresDeJugadores();
+
                     },
                     function(error) {
                         switch(error.code) {
@@ -129,6 +121,81 @@
                 );
             } else {
                 alert('Error: Tu navegador no admite geolocalización.');
+            }
+
+            // Agregar marcadores de jugadores
+            function agregarMarcadoresDeJugadores() {
+                var dbRef = firebase.database().ref('ubicaciones_jugadores');
+                dbRef.on('value', function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var jugador = childSnapshot.val();
+                        L.marker([jugador.latitud, jugador.longitud]).addTo(map)
+                            .bindPopup('<b>' + jugador.nombre + '</b>');
+                    });
+                });
+            }
+
+            // Evento para agregar ubicaciones
+            document.getElementById('agregarUbicacionBtn').addEventListener('click', function() {
+                agregandoUbicacion = true;
+                creandoRuta = false;  // Desactivar el modo de crear ruta
+                alert('Haz clic en el mapa para agregar una nueva ubicación.');
+            });
+
+            // Evento para crear rutas
+            document.getElementById('crearRutaBtn').addEventListener('click', function() {
+                creandoRuta = true;
+                agregandoUbicacion = false;  // Desactivar el modo de agregar ubicación
+                puntosRuta = [];  // Reiniciar puntos de ruta
+                alert('Haz doble clic en el mapa para agregar puntos de la ruta.');
+            });
+
+            // Mapa clic
+            map.on('click', function(e) {
+                if (agregandoUbicacion) {
+                    // Agregar ubicación
+                    var nuevaUbicacion = { latitud: e.latlng.lat, longitud: e.latlng.lng };
+                    guardarUbicacion(nuevaUbicacion);
+                }
+            });
+
+            // Mapa doble clic
+            map.on('dblclick', function(e) {
+                if (creandoRuta) {
+                    // Agregar punto a la ruta
+                    puntosRuta.push(e.latlng);
+                    L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+                    // Si hay al menos 2 puntos, dibuja la ruta y guárdala
+                    if (puntosRuta.length >= 2) {
+                        var ruta = L.polyline(puntosRuta, { color: 'blue' }).addTo(map);
+                        guardarRuta(puntosRuta);
+                        puntosRuta = [];  // Reiniciar puntos de la ruta
+                    }
+                }
+            });
+
+            // Guardar nueva ubicación en Firebase
+            function guardarUbicacion(ubicacion) {
+                var dbRef = firebase.database().ref('ubicaciones_jugadores');
+                dbRef.push(ubicacion).then(() => {
+                    console.log("Ubicación guardada exitosamente");
+                }).catch((error) => {
+                    console.error("Error al guardar la ubicación: ", error);
+                });
+            }
+
+            // Guardar ruta en Firebase
+            function guardarRuta(puntosRuta) {
+                var dbRef = firebase.database().ref('rutas');
+                var nuevaRuta = {
+                    puntos: puntosRuta.map(point => ({ latitud: point.lat, longitud: point.lng }))
+                };
+                dbRef.push(nuevaRuta).then(() => {
+                    console.log("Ruta guardada exitosamente");
+                }).catch((error) => {
+                    console.error("Error al guardar la ruta: ", error);
+                });
             }
         }
 
