@@ -1,11 +1,4 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCebnvxBCyTzDAbFrTr1lQBHEJ9RolBIww",
   authDomain: "pkforall-dbd49.firebaseapp.com",
@@ -17,20 +10,19 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 const autentificacion=firebase.auth();
-const analytics = getAnalytics(app);
 
 const botoniniciarsesion=document.getElementById("login");
 const botoncerrarsesion=document.getElementById("logout");
-const detailusuario=document.getElementById("user-name");
+const detailusuario=document.getElementById("username");
 const fotoUser=document.getElementById("user-img");
 
 //Evento de inicio de sesion
 botoniniciarsesion.addEventListener('click', ()=>{
-  const proveedor=new firebase.GoogleAuthProvider();
+  const proveedor=new firebase.auth.GoogleAuthProvider();
   
-  autentificacion.signInithPopup(proveedor)
+  autentificacion.signInWithPopup(proveedor)
 
     .then(resultado=>{
     const usuario=resultado.user;
@@ -42,7 +34,29 @@ botoniniciarsesion.addEventListener('click', ()=>{
 
 );
 
+botoncerrarsesion.addEventListener('click',()=>{
+  autentificacion.signOut()
+  .then(()=>{
+    borrardatos()
+  })
+  .catch(error=>{
+    console.error("Error al cerrar sesion", error);
+  });
+});
+
 const mostrarInfoUsuario=(usuario)=>{
-  detailusuarioUsuatio.textContent=`Hola bienvenido, ${usuario.displayName}`;
+  detailusuario.textContent=`Hola bienvenido, ${usuario.displayName}`;
   fotoUser.src=usuario.photoURL;
 };
+
+const borrardatos=()=>{
+  detailusuario.textContent='';
+  fotoUser.src='';
+}
+  autentificacion.onAuthStateChanged(usuario=>{
+    if(usuario){
+      mostrarInfoUsuario(usuario)
+    }else{
+      borrardatos();
+    }
+  });

@@ -48,33 +48,36 @@
             cursor: pointer;
             background-color: transparent;
             border: none;
+            font-size: 18px;
+            color: #4c6baf;
+        }
+
+        .main-content button:hover {
+            color: #3b548c; /* Cambio de color al pasar el mouse */
         }
 
         .main-content button img {
             width: 100px; /* Tamaño de las imágenes */
             height: auto; /* Altura automática para mantener la proporción */
         }
-
-        .main-content button:hover img {
-            opacity: 0.8; /* Opacidad al pasar el mouse */
-        }
     </style>
 </head>
 <body>
    
-   
     <div class="container">
         <div class="header">
-            <img src="Imag/profile_icon.jfif" alt="Icono de perfil" class="icon" onclick="verPerfil()">
-            <img src="Imag/settings_icon.jfif" alt="Icono de configuraciones" class="icon" onclick="verConfiguraciones()">
-            <img src="Imag/videos_icon.jfif" alt="Icono de videos" class="icon" onclick="verVideos()">
-            <img src="Imag/gps_icon.jfif" alt="Icono de geolocalización" class="icon" onclick="funcionGeolocalizacion()">
+            <button onclick="verPerfil()"><img src="Imag/profile_icon.jfif" alt="Perfil"></button>
+            <button onclick="verConfiguraciones()"><img src="Imag/settings_icon.jfif" alt="Configuraciones"></button>
+            <button onclick="verVideos()"><img src="Imag/videos_icon.jfif" alt="Videos"></button>
+            <button onclick="funcionGeolocalizacion()"><img src="Imag/gps_icon.jfif" alt="Geolocalización"></button>
+            <button onclick="verChat()">Chat</button> <!-- Botón de texto para el chat -->
         </div>
     </div>
    
     <div class="main-content">
-        <!-- Aquí se pueden agregar más botones de imagen según sea necesario -->
+        <!-- Aquí se pueden agregar más botones de texto según sea necesario -->
     </div>
+    
     <script>
         function verPerfil() {
             window.location.href = "perfil.html"; // Cambia esta URL según tu estructura
@@ -91,7 +94,12 @@
         function funcionGeolocalizacion() {
             window.location.href = "geolocalizacion.html"; // Cambia esta URL según tu estructura
         }
+
+        function verChat() {
+            window.location.href = "chat.html"; // Redirige a la pantalla de selección de chat
+        }
     </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
