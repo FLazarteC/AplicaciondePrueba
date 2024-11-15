@@ -1,22 +1,46 @@
-const userId = firebase.auth().currentUser.uid;
-const dbRef = firebase.database().ref('usuarios/' + userId + '/amigos');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Amigos</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+</head>
+<body>
+    <h2>Mis Amigos</h2>
+    <ul id="listaAmigos" class="list-group">
+        <!-- La lista de amigos se agregará aquí -->
+    </ul>
 
-dbRef.once('value').then(snapshot => {
-    const amigos = snapshot.val() || [];  // Obtén los amigos del usuario
-    const listaAmigos = document.getElementById('listaAmigos');
-    
-    if (amigos.length > 0) {
-        amigos.forEach(amigo => {
-            const li = document.createElement('li');
-            li.classList.add('list-group-item');
-            li.textContent = amigo.nombre;
-            li.onclick = () => iniciarChat(amigo.id);
-            listaAmigos.appendChild(li);
+    <script>
+        // Tu código de Firebase aquí
+        const userId = firebase.auth().currentUser.uid;
+        const dbRef = firebase.database().ref('usuarios/' + userId + '/amigos');
+        dbRef.once('value').then(snapshot => {
+            const amigos = snapshot.val() || []; // Obtén los amigos del usuario
+            const listaAmigos = document.getElementById('listaAmigos');
+            if (amigos.length > 0) {
+                amigos.forEach(amigo => {
+                    const li = document.createElement('li');
+                    li.classList.add('list-group-item');
+                    li.textContent = amigo.nombre;
+                    li.onclick = () => iniciarChat(amigo.id);
+                    listaAmigos.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.textContent = "Aún no tienes amigos con los cuales charlar.";
+                listaAmigos.appendChild(li);
+            }
         });
-    } else {
-        const li = document.createElement('li');
-        li.classList.add('list-group-item');
-        li.textContent = "Aún no tienes amigos con los cuales charlar.";
-        listaAmigos.appendChild(li);
-    }
-});
+
+        // Función que inicia el chat con el amigo seleccionado
+        function iniciarChat(amigoId) {
+            // Aquí puedes agregar la lógica para iniciar un chat con el amigo
+            console.log('Iniciando chat con: ' + amigoId);
+        }
+    </script>
+</body>
+</html>
