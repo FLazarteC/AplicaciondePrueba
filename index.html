@@ -4,63 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
-    <script src="firebase.js"></script> <!-- Este es el archivo donde inicializas Firebase -->
 </head>
+<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
 <body>
     <button id="login">Iniciar sesión con Google</button>
-    <button id="logout" style="display: none;">Cerrar sesión</button>
-    <button id="goToMenu" style="display: none;" onclick="window.location.href='menu_principal.html'">Ir al Menú Principal</button> <!-- Botón que aparecerá solo cuando inicie sesión -->
+    <button id="logout" style="display:none;">Cerrar sesión</button>
     <br>
     <p id="username"></p>
+    </br>
     <img src="" alt="" id="user-img">
+    <br><br>
+    <!-- Botón que solo se muestra si el usuario ha iniciado sesión -->
+    <button id="goToMenu" style="display:none;" onclick="window.location.href = 'menu_principal.html';">Ir al Menú Principal</button>
+
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="firebase.js"></script>
 
     <script>
-        // Comprobamos si el usuario está autenticado
-        firebase.auth().onAuthStateChanged(user => {
-            const loginButton = document.getElementById("login");
-            const logoutButton = document.getElementById("logout");
-            const goToMenuButton = document.getElementById("goToMenu");
-            const username = document.getElementById("username");
-            const userImg = document.getElementById("user-img");
+        // Obtener referencias de los botones y elementos de la página
+        const loginButton = document.getElementById("login");
+        const logoutButton = document.getElementById("logout");
+        const goToMenuButton = document.getElementById("goToMenu");
+        const username = document.getElementById("username");
+        const userImg = document.getElementById("user-img");
 
-            if (user) {
-                // Si el usuario está autenticado
-                loginButton.style.display = "none";
-                logoutButton.style.display = "inline-block";
-                goToMenuButton.style.display = "inline-block";
-                username.textContent = `Hola, ${user.displayName}`;
-                userImg.src = user.photoURL;
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCebnvxBCyTzDAbFrTr1lQBHEJ9RolBIww",
+            authDomain: "pkforall-dbd49.firebaseapp.com",
+            projectId: "pkforall-dbd49",
+            storageBucket: "pkforall-dbd49.firebasestorage.app",
+            messagingSenderId: "862448465532",
+            appId: "1:862448465532:web:504225c84a92f26078fbf9",
+            measurementId: "G-2TMF5G974L"
+        };
+
+        // Inicialización de Firebase
+        firebase.initializeApp(firebaseConfig);
+        const autentificacion = firebase.auth();
+
+        // Evento para iniciar sesión con Google
+        loginButton.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            autentificacion.signInWithPopup(provider)
+                .then(resultado => {
+                    const usuario = resultado.user;
+                    mostrarInfoUsuario(usuario);
+                })
+                .catch(error => {
+                    console.error('Error al iniciar sesión', error);
+                });
+        });
+
+        // Evento para cerrar sesión
+        logoutButton.addEventListener('click', () => {
+            autentificacion.signOut()
+                .then(() => {
+                    borrardatos();
+                })
+                .catch(error => {
+                    console.error("Error al cerrar sesión", error);
+                });
+        });
+
+        // Mostrar la información del usuario
+        const mostrarInfoUsuario = (usuario) => {
+            username.textContent = `Hola bienvenido, ${usuario.displayName}`;
+            userImg.src = usuario.photoURL;
+            loginButton.style.display = "none"; // Ocultar el botón de login
+            logoutButton.style.display = "inline-block"; // Mostrar el botón de logout
+            goToMenuButton.style.display = "inline-block"; // Mostrar el botón para ir al menú principal
+        };
+
+        // Borrar los datos del usuario
+        const borrardatos = () => {
+            username.textContent = '';
+            userImg.src = '';
+            loginButton.style.display = "inline-block"; // Mostrar el botón de login
+            logoutButton.style.display = "none"; // Ocultar el botón de logout
+            goToMenuButton.style.display = "none"; // Ocultar el botón para ir al menú principal
+        };
+
+        // Comprobar el estado de autenticación del usuario
+        autentificacion.onAuthStateChanged(usuario => {
+            if (usuario) {
+                mostrarInfoUsuario(usuario);
             } else {
-                // Si el usuario no está autenticado
-                loginButton.style.display = "inline-block";
-                logoutButton.style.display = "none";
-                goToMenuButton.style.display = "none";
-                username.textContent = "";
-                userImg.src = "";
+                borrardatos();
             }
         });
-
-        // Iniciar sesión con Google
-        document.getElementById("login").addEventListener("click", () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider).then(result => {
-                const user = result.user;
-                console.log(user);
-            }).catch(error => {
-                console.error("Error al iniciar sesión", error);
-            });
-        });
-
-        // Cerrar sesión
-        document.getElementById("logout").addEventListener("click", () => {
-            firebase.auth().signOut().then(() => {
-                console.log("Sesión cerrada");
-            }).catch(error => {
-                console.error("Error al cerrar sesión", error);
-            });
-        });
     </script>
+
 </body>
 </html>
