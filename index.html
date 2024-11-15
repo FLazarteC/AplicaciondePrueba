@@ -9,92 +9,84 @@
 <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
 <body>
     <button id="login">Iniciar sesión con Google</button>
-    <button id="logout" style="display:none;">Cerrar sesión</button>
+    <button id="logout">Cerrar sesión</button>
     <br>
     <p id="username"></p>
-    </br>
+    <br>
     <img src="" alt="" id="user-img">
-    <br><br>
-    <!-- Botón que solo se muestra si el usuario ha iniciado sesión -->
-    <button id="goToMenu" style="display:none;" onclick="window.location.href = 'menu_principal.html';">Ir al Menú Principal</button>
-
-    <!-- Firebase App (the core Firebase SDK) -->
-    <script src="firebase.js"></script>
-
+    <br>
+    <div class="container">
+        <button onclick="ingresarAlJuego()">Ingresar al Juego</button>
+    </div>
     <script>
-        // Obtener referencias de los botones y elementos de la página
-        const loginButton = document.getElementById("login");
-        const logoutButton = document.getElementById("logout");
-        const goToMenuButton = document.getElementById("goToMenu");
-        const username = document.getElementById("username");
-        const userImg = document.getElementById("user-img");
-
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCebnvxBCyTzDAbFrTr1lQBHEJ9RolBIww",
-            authDomain: "pkforall-dbd49.firebaseapp.com",
-            projectId: "pkforall-dbd49",
-            storageBucket: "pkforall-dbd49.firebasestorage.app",
-            messagingSenderId: "862448465532",
-            appId: "1:862448465532:web:504225c84a92f26078fbf9",
-            measurementId: "G-2TMF5G974L"
-        };
-
-        // Inicialización de Firebase
-        firebase.initializeApp(firebaseConfig);
-        const autentificacion = firebase.auth();
-
-        // Evento para iniciar sesión con Google
-        loginButton.addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            autentificacion.signInWithPopup(provider)
-                .then(resultado => {
-                    const usuario = resultado.user;
-                    mostrarInfoUsuario(usuario);
-                })
-                .catch(error => {
-                    console.error('Error al iniciar sesión', error);
-                });
-        });
-
-        // Evento para cerrar sesión
-        logoutButton.addEventListener('click', () => {
-            autentificacion.signOut()
-                .then(() => {
-                    borrardatos();
-                })
-                .catch(error => {
-                    console.error("Error al cerrar sesión", error);
-                });
-        });
-
-        // Mostrar la información del usuario
-        const mostrarInfoUsuario = (usuario) => {
-            username.textContent = `Hola bienvenido, ${usuario.displayName}`;
-            userImg.src = usuario.photoURL;
-            loginButton.style.display = "none"; // Ocultar el botón de login
-            logoutButton.style.display = "inline-block"; // Mostrar el botón de logout
-            goToMenuButton.style.display = "inline-block"; // Mostrar el botón para ir al menú principal
-        };
-
-        // Borrar los datos del usuario
-        const borrardatos = () => {
-            username.textContent = '';
-            userImg.src = '';
-            loginButton.style.display = "inline-block"; // Mostrar el botón de login
-            logoutButton.style.display = "none"; // Ocultar el botón de logout
-            goToMenuButton.style.display = "none"; // Ocultar el botón para ir al menú principal
-        };
-
-        // Comprobar el estado de autenticación del usuario
-        autentificacion.onAuthStateChanged(usuario => {
-            if (usuario) {
-                mostrarInfoUsuario(usuario);
-            } else {
-                borrardatos();
-            }
-        });
+        function ingresarAlJuego() {
+            // Aquí puedes redirigir al menú principal o iniciar el juego
+            window.location.href = "menu_principal.html"; // Cambia esta URL según tu estructura
+        }
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="firebase.js"></script>
+<script>
+    // Referencia a los elementos del DOM
+    const botonIniciarSesion = document.getElementById("login");
+    const botonCerrarSesion = document.getElementById("logout");
+    const detalleUsuario = document.getElementById("username");
+    const fotoUsuario = document.getElementById("user-img");
+    const botonMenu = document.getElementById("menu");
+
+    // Configuración de Firebase
+    // Asegúrate de que tu archivo firebase.js tenga la configuración de Firebase
+
+    // Evento de inicio de sesión
+    botonIniciarSesion.addEventListener('click', () => {
+        const proveedor = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(proveedor)
+            .then(resultado => {
+                const usuario = resultado.user;
+                mostrarInfoUsuario(usuario);
+            })
+            .catch(error => {
+                console.error('Error al iniciar sesión', error);
+            });
+    });
+
+    // Evento de cierre de sesión
+    botonCerrarSesion.addEventListener('click', () => {
+        firebase.auth().signOut()
+            .then(() => {
+                borrarDatos();
+            })
+            .catch(error => {
+                console.error("Error al cerrar sesión", error);
+            });
+    });
+
+    // Mostrar información del usuario
+    const mostrarInfoUsuario = (usuario) => {
+        detalleUsuario.textContent = `Hola, ${usuario.displayName}`;
+        fotoUsuario.src = usuario.photoURL;
+    };
+
+    // Borrar información del usuario
+    const borrarDatos = () => {
+        detalleUsuario.textContent = '';
+        fotoUsuario.src = '';
+    };
+
+    // Detectar cambios en el estado de autenticación
+    firebase.auth().onAuthStateChanged(usuario => {
+        if (usuario) {
+            mostrarInfoUsuario(usuario);
+        } else {
+            borrarDatos();
+        }
+    });
+
+    // Redirigir al menú principal al hacer clic en el botón de menú
+    botonMenu.addEventListener('click', () => {
+        window.location.href = "menu_principal.html"; // Cambia "menu-principal.html" al nombre de tu archivo de menú
+    });
+</script>
 </html>
