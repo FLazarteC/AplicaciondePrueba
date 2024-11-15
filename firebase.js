@@ -8,37 +8,46 @@ const firebaseConfig = {
   measurementId: "G-2TMF5G974L"
 };
 
-// Initialize Firebase
+// Inicializa Firebase
 firebase.initializeApp(firebaseConfig);
 const autentificacion = firebase.auth();
 
-// Obtenemos los elementos del DOM
-const botoniniciarsesion = document.getElementById("login");
-const botoncerrarsesion = document.getElementById("logout");
-const detailusuario = document.getElementById("username");
+const botonIniciarSesion = document.getElementById("login");
+const botonCerrarSesion = document.getElementById("logout");
+const detailUsuario = document.getElementById("username");
 const fotoUser = document.getElementById("user-img");
 
+// Verifica el estado de autenticación
+autentificacion.onAuthStateChanged(usuario => {
+  if (usuario) {
+    // Si el usuario está autenticado, redirige al menú principal
+    window.location.href = "menu_principal.html"; // Cambia esta URL a la que corresponda
+    mostrarInfoUsuario(usuario);
+  } else {
+    // Si el usuario no está autenticado, muestra la pantalla de login
+    borrardatos();
+  }
+});
+
 // Evento de inicio de sesión
-botoniniciarsesion.addEventListener('click', () => {
+botonIniciarSesion.addEventListener('click', () => {
   const proveedor = new firebase.auth.GoogleAuthProvider();
 
   autentificacion.signInWithPopup(proveedor)
     .then(resultado => {
       const usuario = resultado.user;
       mostrarInfoUsuario(usuario);
-      window.location.href = "menu_principal.html";  // Redirigir al menú principal si inicia sesión
     })
     .catch(error => {
       console.error('Error al iniciar sesión', error);
     });
 });
 
-// Evento de cerrar sesión
-botoncerrarsesion.addEventListener('click', () => {
+// Evento de cierre de sesión
+botonCerrarSesion.addEventListener('click', () => {
   autentificacion.signOut()
     .then(() => {
       borrardatos();
-      window.location.href = "index.html";  // Redirigir al index (login) después de cerrar sesión
     })
     .catch(error => {
       console.error("Error al cerrar sesión", error);
@@ -47,23 +56,12 @@ botoncerrarsesion.addEventListener('click', () => {
 
 // Mostrar información del usuario
 const mostrarInfoUsuario = (usuario) => {
-  detailusuario.textContent = `Hola bienvenido, ${usuario.displayName}`;
+  detailUsuario.textContent = `Hola bienvenido, ${usuario.displayName}`;
   fotoUser.src = usuario.photoURL;
 };
 
-// Borrar los datos del usuario
+// Borrar datos de usuario cuando se cierre sesión
 const borrardatos = () => {
-  detailusuario.textContent = '';
+  detailUsuario.textContent = '';
   fotoUser.src = '';
 };
-
-// Verificar el estado de autenticación
-autentificacion.onAuthStateChanged(usuario => {
-  if (usuario) {
-    mostrarInfoUsuario(usuario);
-    window.location.href = "menu_principal.html";  // Redirigir automáticamente al menú si el usuario está autenticado
-  } else {
-    borrardatos();
-    window.location.href = "index.html";  // Redirigir al login si no hay usuario autenticado
-  }
-});
