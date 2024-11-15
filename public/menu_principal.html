@@ -41,24 +41,33 @@
             align-items: center; /* Centra los botones verticalmente */
             gap: 20px;
             margin-top: 20px; /* Espacio arriba de los botones */
+            width: 100%;
+            padding: 20px; /* Asegura que no quede pegado al borde */
+            box-sizing: border-box; /* Para incluir el padding en el cálculo del ancho */
+            text-align: center; /* Centra los textos dentro de los botones */
         }
 
         .main-content button {
-            padding: 10px;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
+            padding: 15px;
             font-size: 18px;
-            color: #4c6baf;
+            cursor: pointer;
+            background-color: #4c6baf;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            width: 100%; /* Hacer que los botones ocupen todo el ancho */
         }
 
         .main-content button:hover {
-            color: #3b548c; /* Cambio de color al pasar el mouse */
+            background-color: #3b548c;
         }
 
-        .main-content button img {
-            width: 100px; /* Tamaño de las imágenes */
-            height: auto; /* Altura automática para mantener la proporción */
+        /* Ajuste de texto dentro de los botones */
+        .main-content button span {
+            display: block;
+            width: 100%;
+            font-size: 20px;
         }
     </style>
 </head>
@@ -66,18 +75,21 @@
    
     <div class="container">
         <div class="header">
-            <button onclick="verPerfil()"><img src="Imag/profile_icon.jfif" alt="Perfil"></button>
-            <button onclick="verConfiguraciones()"><img src="Imag/settings_icon.jfif" alt="Configuraciones"></button>
-            <button onclick="verVideos()"><img src="Imag/videos_icon.jfif" alt="Videos"></button>
-            <button onclick="funcionGeolocalizacion()"><img src="Imag/gps_icon.jfif" alt="Geolocalización"></button>
-            <button onclick="verChat()">Chat</button> <!-- Botón de texto para el chat -->
+            <img src="Imag/profile_icon.jfif" alt="Icono de perfil" class="icon" onclick="verPerfil()">
+            <img src="Imag/settings_icon.jfif" alt="Icono de configuraciones" class="icon" onclick="verConfiguraciones()">
+            <img src="Imag/videos_icon.jfif" alt="Icono de videos" class="icon" onclick="verVideos()">
+            <img src="Imag/gps_icon.jfif" alt="Icono de geolocalización" class="icon" onclick="funcionGeolocalizacion()">
         </div>
     </div>
-   
+
     <div class="main-content">
-        <!-- Aquí se pueden agregar más botones de texto según sea necesario -->
+        <button onclick="verChat()">Chat</button>
+        <button onclick="verPerfil()">Perfil</button>
+        <button onclick="verConfiguraciones()">Configuraciones</button>
+        <button onclick="verVideos()">Videos</button>
+        <button onclick="funcionGeolocalizacion()">Geolocalización</button>
     </div>
-    
+
     <script>
         function verPerfil() {
             window.location.href = "perfil.html"; // Cambia esta URL según tu estructura
@@ -99,7 +111,6 @@
             window.location.href = "Comunicacion.html"; // Redirige a la pantalla de selección de chat
         }
     </script>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

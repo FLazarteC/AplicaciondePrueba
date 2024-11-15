@@ -1,0 +1,22 @@
+const userId = firebase.auth().currentUser.uid;
+const dbRef = firebase.database().ref('usuarios/' + userId + '/amigos');
+
+dbRef.once('value').then(snapshot => {
+    const amigos = snapshot.val() || [];  // Obtén los amigos del usuario
+    const listaAmigos = document.getElementById('listaAmigos');
+    
+    if (amigos.length > 0) {
+        amigos.forEach(amigo => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.textContent = amigo.nombre;
+            li.onclick = () => iniciarChat(amigo.id);
+            listaAmigos.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.textContent = "Aún no tienes amigos con los cuales charlar.";
+        listaAmigos.appendChild(li);
+    }
+});

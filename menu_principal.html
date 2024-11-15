@@ -41,27 +41,37 @@
             align-items: center; /* Centra los botones verticalmente */
             gap: 20px;
             margin-top: 20px; /* Espacio arriba de los botones */
+            width: 100%;
+            padding: 20px; /* Asegura que no quede pegado al borde */
+            box-sizing: border-box; /* Para incluir el padding en el cálculo del ancho */
+            text-align: center; /* Centra los textos dentro de los botones */
         }
 
         .main-content button {
-            padding: 10px;
+            padding: 15px;
+            font-size: 18px;
             cursor: pointer;
-            background-color: transparent;
+            background-color: #4c6baf;
+            color: white;
             border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            width: 100%; /* Hacer que los botones ocupen todo el ancho */
         }
 
-        .main-content button img {
-            width: 100px; /* Tamaño de las imágenes */
-            height: auto; /* Altura automática para mantener la proporción */
+        .main-content button:hover {
+            background-color: #3b548c;
         }
 
-        .main-content button:hover img {
-            opacity: 0.8; /* Opacidad al pasar el mouse */
+        /* Ajuste de texto dentro de los botones */
+        .main-content button span {
+            display: block;
+            width: 100%;
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
-   
    
     <div class="container">
         <div class="header">
@@ -71,10 +81,15 @@
             <img src="Imag/gps_icon.jfif" alt="Icono de geolocalización" class="icon" onclick="funcionGeolocalizacion()">
         </div>
     </div>
-   
+
     <div class="main-content">
-        <!-- Aquí se pueden agregar más botones de imagen según sea necesario -->
+        <button onclick="verChat()">Chat</button>
+        <button onclick="verPerfil()">Perfil</button>
+        <button onclick="verConfiguraciones()">Configuraciones</button>
+        <button onclick="verVideos()">Videos</button>
+        <button onclick="funcionGeolocalizacion()">Geolocalización</button>
     </div>
+
     <script>
         function verPerfil() {
             window.location.href = "perfil.html"; // Cambia esta URL según tu estructura
@@ -90,6 +105,10 @@
 
         function funcionGeolocalizacion() {
             window.location.href = "geolocalizacion.html"; // Cambia esta URL según tu estructura
+        }
+
+        function verChat() {
+            window.location.href = "Comunicacion.html"; // Redirige a la pantalla de selección de chat
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

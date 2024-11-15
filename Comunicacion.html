@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantalla de Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #4c6baf;
+            color: white;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .main-content button {
+            width: 200px;
+            padding: 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4c6baf;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .main-content button:hover {
+            background-color: #3b548c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Chat</h2>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <button onclick="verChatAmigos()">Amigos</button>
+        <button onclick="verChatGeneral()">General</button>
+        <button onclick="verChatGremio()">Gremio/Grupo</button>
+        <button onclick="verSolicitudes()">Solicitudes de Amistad</button>
+    </div>
+
+    <script>
+        // Redirige al chat con amigos
+        function verChatAmigos() {
+            window.location.href = "chat_amigos.html"; // Cambia esta URL según tu estructura
+        }
+
+        // Redirige al chat general
+        function verChatGeneral() {
+            window.location.href = "chat_general.html"; // Cambia esta URL según tu estructura
+        }
+
+        // Redirige al chat del gremio o grupo
+        function verChatGremio() {
+            window.location.href = "chat_gremio.html"; // Cambia esta URL según tu estructura
+        }
+
+        // Redirige a la pantalla de solicitudes de amistad
+        function verSolicitudes() {
+            window.location.href = "solicitudes.html"; // Cambia esta URL según tu estructura
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
